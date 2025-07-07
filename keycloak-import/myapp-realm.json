@@ -1,0 +1,27 @@
+{
+  "realm": "myapp",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "myapp-client",
+      "enabled": true,
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "mcharpen",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "mypassword",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+} 
