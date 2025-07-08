@@ -29,6 +29,22 @@ services:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
+  backend:
+    build:
+      context: ./backend/backend
+    container_name: myfirstgitapp-backend
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres:5432/youtube_summary_db
+      - QUARKUS_DATASOURCE_USERNAME=mcharpen
+      - QUARKUS_DATASOURCE_PASSWORD=mypgpassword
+      - QUARKUS_HTTP_PORT=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - keycloak
+    restart: unless-stopped
+
   frontend:
     build:
       context: ./frontend
