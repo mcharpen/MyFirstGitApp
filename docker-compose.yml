@@ -63,6 +63,7 @@ services:
       - "3000:80"
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/out:/usr/share/nginx/html:ro
     depends_on:
       - frontend 
 
