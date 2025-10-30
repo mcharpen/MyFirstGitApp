@@ -15,6 +15,9 @@
     {
       "username": "mcharpen",
       "enabled": true,
+      "email": "marc.charpentier@icloud.com",
+      "firstName": "Marc",
+      "lastName": "Charpentier",
       "credentials": [
         {
           "type": "password",
