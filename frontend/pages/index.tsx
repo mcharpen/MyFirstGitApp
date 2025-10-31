@@ -88,7 +88,7 @@ const Home: React.FC = () => {
 
       {/* Main content */}
       <main style={{ flex: 1, padding: '24px' }}>
-        <h1 style={{ marginTop: 0 }}>Welcome to MyFirstGitApp Frontend</h1>
+        <h1 style={{ marginTop: 0 }}>Welcome to Libertinage</h1>
         <div style={{ marginBottom: 16 }}>
           {session ? (
             <>
