@@ -1,10 +1,6 @@
 pipeline {
     agent { label 'dev2' }
 
-    triggers {
-        // Optional: automatically build on GitHub webhooks or polling
-        // pollSCM('* * * * *')  // every minute
-    }
 
     stages {
 
