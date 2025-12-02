@@ -24,7 +24,7 @@ const Home: React.FC = () => {
 
   const fetchEmps = () => {
     setLoading(true);
-    fetch("/emp")
+    fetch("/libertyX/emp")
       .then((r) => {
         if (!r.ok) throw new Error("Failed to fetch emps");
         return r.json();
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
     }
     const payload = { firstName, lastName, birthDate: birthDate || undefined, salary: salary || undefined };
     try {
-      const res = await fetch("/emp", {
+      const res = await fetch("/libertyX/emp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
