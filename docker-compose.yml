@@ -56,6 +56,7 @@ services:
       - KEYCLOAK_CLIENT_SECRET=your-actual-keycloak-client-secret
       - KEYCLOAK_ISSUER=http://keycloak:8080/realms/myapp
       - NEXTAUTH_SECRET=your-random-secret
+      - NEXTAUTH_URL=http://dev2.sophia.com/libertyX
     ports:
       - "3000:3000"
     depends_on:
