@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  create_emp_table.sql: |
+    CREATE TABLE IF NOT EXISTS emp (
+        id SERIAL PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        birth_date DATE,
+        salary NUMERIC(12,2)
+    );
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: postgres
+  name: postgres-cm1
