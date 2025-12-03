@@ -1,0 +1,13 @@
+- hosts: master
+  become: yes
+  tasks:
+    - name: Initialize Kubernetes master
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16
+      register: kubeadm_output
+      ignore_errors: yes
+
+    - name: Save join command
+      copy:
+        dest: /tmp/kubeadm_join.sh
+        content: "{{ kubeadm_output.stdout_lines | select('search','kubeadm join') | list | join('\n') }}"
+

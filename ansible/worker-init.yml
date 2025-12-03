@@ -1,0 +1,6 @@
+- hosts: workers
+  become: yes
+  tasks:
+    - name: Join cluster
+      command: sh /tmp/kubeadm_join.sh
+
