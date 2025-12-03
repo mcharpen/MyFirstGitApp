@@ -1,8 +1,12 @@
 - hosts: master
   become: yes
+  vars_files:
+    - vault.yml
+  vars:
+    ansible_become_password: "{{ become_pass }}"
   tasks:
     - name: Initialize Kubernetes master
-      command: kubeadm init --pod-network-cidr=10.244.0.0/16
+      command: kubeadm init --cri-socket unix:///run/containerd/containerd.sock --pod-network-cidr=10.244.0.0/16
       register: kubeadm_output
       ignore_errors: yes
 
@@ -10,4 +14,26 @@
       copy:
         dest: /tmp/kubeadm_join.sh
         content: "{{ kubeadm_output.stdout_lines | select('search','kubeadm join') | list | join('\n') }}"
+
+    - name: Ensure .kube directory exists for user
+      file:
+        path: /home/mcharpen/.kube
+        state: directory
+        owner: mcharpen
+        group: mcharpen
+        mode: '0755'
+
+    - name: Copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/mcharpen/.kube/config
+        remote_src: yes
+        owner: mcharpen
+        group: mcharpen
+        mode: '0644'
+
+    - name: Apply Flannel CNI
+      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      environment:
+        KUBECONFIG: /home/mcharpen/.kube/config
 
