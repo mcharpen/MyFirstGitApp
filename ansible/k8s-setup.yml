@@ -1,28 +1,31 @@
+---
 - hosts: all
   become: yes
+  vars_files:
+    - vault.yml
+  vars:
+    ansible_become_password: "{{ become_pass }}"
   tasks:
-    - name: Update system
+    - name: Update system packages
       dnf:
         name: "*"
         state: latest
 
     - name: Disable swap
       command: swapoff -a
-      args:
-        warn: false
 
-    - name: Remove swap from fstab
+    - name: Remove swap entry from fstab
       replace:
         path: /etc/fstab
         regexp: '(^.*swap.*$)'
         replace: '# \1'
 
-    - name: Enable kernel modules
+    - name: Enable kernel modules for Kubernetes
       shell: |
         modprobe overlay
         modprobe br_netfilter
 
-    - name: Set sysctl params
+    - name: Configure sysctl for Kubernetes networking
       copy:
         dest: /etc/sysctl.d/k8s.conf
         content: |
@@ -31,16 +34,44 @@
           net.bridge.bridge-nf-call-ip6tables = 1
       notify: Reload sysctl
 
-    - name: Install Docker
+    - name: Apply sysctl settings
+      command: sysctl --system
+
+    - name: Install containerd
       dnf:
-        name: docker-engine
+        name: containerd
         state: present
 
-    - name: Enable Docker
+    - name: Create containerd config directory
+      file:
+        path: /etc/containerd
+        state: directory
+
+    - name: Generate default containerd configuration
+      command: containerd config default
+      register: containerd_config
+
+    - name: Write containerd configuration file
+      copy:
+        dest: /etc/containerd/config.toml
+        content: "{{ containerd_config.stdout }}"
+
+    - name: Enable and start containerd
       systemd:
-        name: docker
+        name: containerd
         state: started
         enabled: yes
+
+    - name: Add Kubernetes repository
+      copy:
+        dest: /etc/yum.repos.d/kubernetes.repo
+        content: |
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
 
     - name: Install Kubernetes packages
       dnf:
@@ -50,12 +81,9 @@
           - kubectl
         state: present
 
-    - name: Enable kubelet
+    - name: Enable kubelet service
       systemd:
         name: kubelet
         enabled: yes
-
-  handlers:
-    - name: Reload sysctl
-      command: sysctl --system
+        state: stopped   # kubelet will be started by kubeadm init/join
 
