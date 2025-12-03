@@ -1,9 +1,11 @@
+---
 - hosts: master
   become: yes
   vars_files:
     - vault.yml
   vars:
     ansible_become_password: "{{ become_pass }}"
+
   tasks:
     - name: Initialize Kubernetes master
       command: kubeadm init --cri-socket unix:///run/containerd/containerd.sock --pod-network-cidr=10.244.0.0/16
@@ -36,4 +38,24 @@
       command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
       environment:
         KUBECONFIG: /home/mcharpen/.kube/config
+
+    - name: Verify cluster nodes
+      command: kubectl get nodes
+      environment:
+        KUBECONFIG: /home/mcharpen/.kube/config
+      register: nodes_output
+
+    - name: Show cluster nodes
+      debug:
+        var: nodes_output.stdout_lines
+
+    - name: Verify system pods
+      command: kubectl get pods -n kube-system
+      environment:
+        KUBECONFIG: /home/mcharpen/.kube/config
+      register: pods_output
+
+    - name: Show system pods
+      debug:
+        var: pods_output.stdout_lines
 
