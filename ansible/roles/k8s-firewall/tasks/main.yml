@@ -1,0 +1,17 @@
+# roles/k8s-firewall/tasks/main.yml
+- name: Ensure net.bridge.bridge-nf-call-iptables is set
+  ansible.posix.sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+    sysctl_set: true
+    reload: true
+
+- name: Ensure net.ipv4.ip_forward is enabled
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    sysctl_set: true
+    reload: true
+

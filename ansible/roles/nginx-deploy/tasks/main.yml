@@ -1,0 +1,89 @@
+- name: Deploy Nginx Deployment
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: nginx-deployment
+        namespace: default        # <-- add this
+        labels:
+          app: nginx
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: nginx
+        template:
+          metadata:
+            labels:
+              app: nginx
+          spec:
+            containers:
+            - name: nginx
+              image: nginx:1.29.3
+              ports:
+              - containerPort: 80
+    kubeconfig: /home/mcharpen/.kube/config
+
+- name: Deploy Nginx Service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: nginx-service
+        namespace: default        # <-- add this
+        labels:
+          app: nginx
+      spec:
+        selector:
+          app: nginx
+        ports:
+        - port: 80
+          targetPort: 80
+    kubeconfig: /home/mcharpen/.kube/config
+
+- name: Deploy Nginx Ingress
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: nginx-ingress
+        namespace: default        # <-- already present
+      spec:
+        ingressClassName: nginx
+        rules:
+        - host: nginx.local
+          http:
+            paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: nginx-service
+                  port:
+                    number: 80
+        defaultBackend:                # <-- add this block
+          service:
+            name: nginx-service
+            port:
+              number: 80
+    kubeconfig: /home/mcharpen/.kube/config
+- name: Validate Nginx Ingress returns 200 OK
+  command: >
+    curl -s -o /dev/null -w "%{http_code}"
+    http://10.17.1.200 -H "Host: nginx.local"
+  register: ingress_response
+  changed_when: false
+
+- name: Assert Ingress is healthy
+  assert:
+    that:
+      - ingress_response.stdout == "200"
+    fail_msg: "Ingress did not return 200 OK, got {{ ingress_response.stdout }}"
+    success_msg: "Ingress returned 200 OK"
+

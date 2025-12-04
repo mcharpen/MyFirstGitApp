@@ -1,0 +1,7 @@
+- hosts: all
+  become: true
+  roles:
+    - k8s-firewall
+    - metallb   # if you also want to include the MetalLB role
+    - nginx-deploy
+
