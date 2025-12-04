@@ -1,0 +1,38 @@
+- name: Create MetalLB namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: metallb-system
+    kubeconfig: /home/mcharpen/.kube/config
+
+- name: Configure MetalLB IP address pool
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: metallb.io/v1beta1
+      kind: IPAddressPool
+      metadata:
+        name: first-pool
+        namespace: metallb-system
+      spec:
+        addresses:
+          - 10.17.1.200-10.17.1.250
+    kubeconfig: /home/mcharpen/.kube/config
+
+- name: Configure MetalLB L2 advertisement
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: metallb.io/v1beta1
+      kind: L2Advertisement
+      metadata:
+        name: l2adv
+        namespace: metallb-system
+      spec:
+        ipAddressPools:
+          - first-pool
+    kubeconfig: /home/mcharpen/.kube/config
+

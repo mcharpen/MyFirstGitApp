@@ -1,0 +1,10 @@
+apiVersion: crd.projectcalico.org/v1
+kind: IPPool
+metadata:
+  name: default-pool
+spec:
+  cidr: 10.244.0.0/16
+  ipipMode: Always
+  natOutgoing: true
+  nodeSelector: all()
+
