@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  myapp-realm.json: "{\n  \"realm\": \"myapp\",\n  \"enabled\": true,\n  \"clients\": [\n    {\n      \"clientId\": \"myapp-client\",\n      \"enabled\": true,\n      \"publicClient\": true,\n      \"redirectUris\": [\n        \"http://localhost:3000/*\",\n        \"http://dev2.sophia.com/libertyX/*\"\n      ]\n    }\n  ],\n  \"users\": [\n    {\n      \"username\": \"mcharpen\",\n      \"enabled\": true,\n      \"email\": \"marc.charpentier@icloud.com\",\n      \"firstName\": \"Marc\",\n      \"lastName\": \"Charpentier\",\n      \"credentials\": [\n        {\n          \"type\": \"password\",\n          \"value\": \"mypassword\",\n          \"temporary\": false\n        }\n      ]\n    }\n  ]\n} "
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: keycloak
+  name: keycloak-cm0

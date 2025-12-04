@@ -7,7 +7,14 @@
       "enabled": true,
       "publicClient": true,
       "redirectUris": [
-        "http://localhost:3000/*"
+        "http://dev2.sophia.com/libertyX/api/auth/callback/keycloak",
+        "http://dev2.sophia.com/libertyX/*",
+        "http://localhost:3000/libertyX/*",
+        "http://localhost:3000/libertyX/api/auth/callback/keycloak"
+      ],
+      "webOrigins": [
+        "http://dev2.sophia.com",
+        "http://localhost:3000"
       ]
     }
   ],
@@ -27,4 +34,4 @@
       ]
     }
   ]
-} 
+}
