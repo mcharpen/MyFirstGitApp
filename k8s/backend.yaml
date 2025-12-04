@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: myfirstgitapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: docker.io/mcharpen5/myfirstapp-backend:latest
+          env:
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://postgres.myfirstgitapp.svc.cluster.local:5432/youtube_summary_db
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: mcharpen
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: mypgpassword
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: myfirstgitapp
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: backend
