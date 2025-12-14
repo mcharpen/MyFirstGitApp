@@ -103,14 +103,9 @@ metadata:
   namespace: default
   annotations:
     kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-http01
 spec:
-  tls:
-    - hosts:
-        - olite.hd.free.fr
-      secretName: nginx-ingress-tls
   rules:
-  - host: olite.hd.free.fr
+  - host: myfirstgitapp.local
     http:
       paths:
       - path: /
