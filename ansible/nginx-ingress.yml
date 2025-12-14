@@ -1,7 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: default
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes auto;
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+    events { worker_connections 1024; }
+    http {
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+      sendfile on; keepalive_timeout 65;
+      server {
+        listen 80;
+        server_name _;
+        # API (NextAuth) under /api → Next.js at /libertyX/api/
+        location /api/ {
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/api/;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        # Backend emp endpoints (supports bare /emp and /libertyX/emp)
+        location = /emp { proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; }
+        location /libertyX/emp { proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; }
+        # Frontend app at /libertyX/
+        location /libertyX/ {
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        # Redirect root to /libertyX/
+        location = / { return 301 /libertyX/; }
+      }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
+  namespace: default
   labels:
     app: nginx
 spec:
@@ -16,7 +60,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:alpine
         ports:
         - containerPort: 80
         readinessProbe:
@@ -25,11 +69,20 @@ spec:
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 10
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: conf
+        configMap:
+          name: nginx-conf
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
+  namespace: default
   labels:
     app: nginx
 spec:
@@ -40,19 +93,11 @@ spec:
     targetPort: 80
   type: ClusterIP
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: app-proxy
-  namespace: default
-spec:
-  type: ExternalName
-  externalName: nginx.myfirstgitapp.svc.cluster.local
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nginx-ingress
+  namespace: default
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-http01
@@ -69,7 +114,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app-proxy
+            name: nginx-service
             port:
               number: 80
 
