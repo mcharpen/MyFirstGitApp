@@ -78,13 +78,17 @@ data:
           "publicClient": true,
           "redirectUris": [
             "http://dev2.sophia.com/libertyX/api/auth/callback/keycloak",
+            "http://dev2.sophia.com/libertyX/callback/keycloak",
             "http://dev2.sophia.com/libertyX/*",
             "http://localhost:3000/libertyX/*",
             "http://localhost:3000/libertyX/api/auth/callback/keycloak",
+            "http://localhost:3000/libertyX/callback/keycloak",
             "http://myfirstgitapp.local/libertyX/*",
             "http://myfirstgitapp.local/libertyX/api/auth/callback/keycloak",
+            "http://myfirstgitapp.local/libertyX/callback/keycloak",
             "https://olite.hd.free.fr/libertyX/*",
-            "https://olite.hd.free.fr/libertyX/api/auth/callback/keycloak"
+            "https://olite.hd.free.fr/libertyX/api/auth/callback/keycloak",
+            "https://olite.hd.free.fr/libertyX/callback/keycloak"
           ],
           "webOrigins": [
             "http://dev2.sophia.com",
