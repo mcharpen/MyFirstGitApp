@@ -57,7 +57,7 @@ data:
         location /libertyX/emp { proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; }
         # Frontend app at /libertyX/
         location /libertyX/ {
-          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/;
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
