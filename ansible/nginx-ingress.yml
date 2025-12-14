@@ -17,6 +17,9 @@ data:
       server {
         listen 80;
         server_name _;
+        # Redirect /libertyX to /libertyX/
+        location = /libertyX { return 301 /libertyX/; }
+        
         # API (NextAuth) under /api → Next.js at /libertyX/api/
         location /api/ {
           proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/api/;
