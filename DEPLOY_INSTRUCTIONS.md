@@ -60,7 +60,8 @@ If you see `OAuthSignin` error, check:
 
 ### 1. Verify Keycloak is accessible from frontend pod
 ```bash
-kubectl exec -it -n myfirstgitapp deploy/frontend -- curl -v http://dev2.sophia.com:32089/realms/myapp/.well-known/openid-configuration
+# Test with Node.js fetch (frontend container has Node.js)
+kubectl exec -it -n myfirstgitapp deploy/frontend -- node -e "fetch('http://keycloak.myfirstgitapp.svc.cluster.local:8080/realms/myapp/.well-known/openid-configuration').then(r=>r.json()).then(console.log).catch(console.error)"
 ```
 
 ### 2. Check frontend logs for detailed error
