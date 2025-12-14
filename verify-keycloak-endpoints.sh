@@ -35,10 +35,8 @@ curl -s http://myfirstgitapp.local/libertyX/api/auth/providers | jq '.'
 
 echo ""
 echo ""
-echo "5. Testing Direct Keycloak Service (from inside cluster):"
-echo ""
-kubectl run test-kc-path --image=curlimages/curl --rm -i --restart=Never -- \
-  sh -c "curl -s http://keycloak.myfirstgitapp.svc.cluster.local:8080/libertyX/auth/realms/myapp/.well-known/openid-configuration 2>&1 | head -5"
+echo "5. Checking Nginx logs for recent /libertyX/auth requests:"
+kubectl exec -n default deployment/nginx-deployment -- tail -20 /var/log/nginx/access.log | grep "/libertyX/auth"
 
 echo ""
 echo ""
