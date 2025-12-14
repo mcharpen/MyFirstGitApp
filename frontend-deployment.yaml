@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.37.0 (HEAD)
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: frontend
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.37.0 (HEAD)
+      labels:
+        io.kompose.service: frontend
+    spec:
+      containers:
+        - env:
+            - name: KEYCLOAK_CLIENT_ID
+              value: myapp-client
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: your-actual-keycloak-client-secret
+            - name: KEYCLOAK_ISSUER
+              value: http://keycloak:8080/realms/myapp
+            - name: NEXTAUTH_SECRET
+              value: your-random-secret
+            - name: NEXTAUTH_URL
+              value: http://dev2.sophia.com/libertyX
+            - name: NODE_ENV
+              value: production
+          image: frontend
+          name: myfirstgitapp-frontend
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      restartPolicy: Always
