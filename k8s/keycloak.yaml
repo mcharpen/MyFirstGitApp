@@ -22,14 +22,12 @@ spec:
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: admin
-            - name: KC_PROXY
-              value: "edge"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
             - name: KC_HOSTNAME_STRICT
               value: "false"
             - name: KC_HOSTNAME_STRICT_HTTPS
               value: "false"
-            - name: KC_HTTP_RELATIVE_PATH
-              value: "/auth"
           ports:
             - containerPort: 8080
           volumeMounts:
