@@ -31,9 +31,11 @@ spec:
             - name: KC_HTTP_RELATIVE_PATH
               value: "/libertyX/auth"
             - name: KC_HOSTNAME_URL
-              value: "http://myfirstgitapp.local/libertyX/auth"
+              value: "https://olite.hd.free.fr/libertyX/auth"
             - name: KC_HOSTNAME_ADMIN_URL
-              value: "http://myfirstgitapp.local/libertyX/auth"
+              value: "https://olite.hd.free.fr/libertyX/auth"
+            - name: KC_PROXY
+              value: "edge"
           ports:
             - containerPort: 8080
           volumeMounts:
