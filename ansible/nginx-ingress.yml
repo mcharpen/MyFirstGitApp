@@ -40,6 +40,15 @@ spec:
     targetPort: 80
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-proxy
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: nginx.myfirstgitapp.svc.cluster.local
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -60,7 +69,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nginx-service
+            name: app-proxy
             port:
               number: 80
 
