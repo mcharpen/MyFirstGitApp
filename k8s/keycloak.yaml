@@ -28,6 +28,12 @@ spec:
               value: "false"
             - name: KC_HOSTNAME_STRICT_HTTPS
               value: "false"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/libertyX/auth"
+            - name: KC_HOSTNAME_URL
+              value: "http://myfirstgitapp.local/libertyX/auth"
+            - name: KC_HOSTNAME_ADMIN_URL
+              value: "http://myfirstgitapp.local/libertyX/auth"
           ports:
             - containerPort: 8080
           volumeMounts:
