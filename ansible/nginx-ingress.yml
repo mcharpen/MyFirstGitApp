@@ -20,9 +20,9 @@ data:
         # Redirect /libertyX to /libertyX/
         location = /libertyX { return 301 /libertyX/; }
         
-        # Keycloak proxy at /auth (rewrite to root path for Keycloak)
-        location /auth/ {
-          rewrite ^/auth/(.*) /$1 break;
+        # Keycloak proxy at /libertyX/auth (rewrite to root path for Keycloak)
+        location /libertyX/auth/ {
+          rewrite ^/libertyX/auth/(.*) /$1 break;
           proxy_pass http://keycloak.myfirstgitapp.svc.cluster.local:8080;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;

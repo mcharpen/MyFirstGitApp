@@ -1,5 +1,5 @@
 #!/bin/bash
-# Simple fix for Keycloak /auth path
+# Simple fix for Keycloak /libertyX/auth path
 
 set -e
 
@@ -20,26 +20,26 @@ sleep 20
 echo "✓ Keycloak is ready"
 echo ""
 
-echo "Step 4: Testing Keycloak direct connection (without /auth)"
+echo "Step 4: Testing Keycloak direct connection (without /libertyX/auth)"
 kubectl run test-kc --image=curlimages/curl --rm -i --restart=Never -- \
   curl -s http://keycloak.myfirstgitapp.svc.cluster.local:8080/realms/myapp/.well-known/openid-configuration \
   | grep -q issuer && echo "✓ Keycloak root path works" || echo "✗ Keycloak root path failed"
 echo ""
 
-echo "Step 5: Applying Nginx config with URL rewriting (/auth → /)"
+echo "Step 5: Applying Nginx config with URL rewriting (/libertyX/auth → /)"
 kubectl apply -f ansible/nginx-ingress.yml
 kubectl rollout restart deployment/nginx-deployment -n default
 kubectl rollout status deployment/nginx-deployment -n default
 echo "✓ Nginx updated"
 echo ""
 
-echo "Step 6: Testing via Ingress with /auth path"
+echo "Step 6: Testing via Ingress with /libertyX/auth path"
 sleep 5
-curl -s http://myfirstgitapp.local/auth/realms/myapp/.well-known/openid-configuration \
-  | grep -q issuer && echo "✓ Keycloak accessible via /auth" || echo "✗ /auth path not working"
+curl -s http://myfirstgitapp.local/libertyX/auth/realms/myapp/.well-known/openid-configuration \
+  | grep -q issuer && echo "✓ Keycloak accessible via /libertyX/auth" || echo "✗ /libertyX/auth path not working"
 echo ""
 
-echo "Step 7: Updating frontend to use https://olite.hd.free.fr/auth/realms/myapp"
+echo "Step 7: Updating frontend to use https://olite.hd.free.fr/libertyX/auth/realms/myapp"
 kubectl apply -f k8s/frontend.yaml
 kubectl rollout restart deployment/frontend -n myfirstgitapp
 kubectl rollout status deployment/frontend -n myfirstgitapp
@@ -50,8 +50,8 @@ echo "=== Configuration Complete ==="
 echo ""
 echo "Keycloak URLs:"
 echo "  - Admin Console (NodePort): http://dev2.sophia.com:32089/admin"
-echo "  - Admin Console (Ingress): http://myfirstgitapp.local/auth/admin"
-echo "  - Public (after external nginx): https://olite.hd.free.fr/auth/admin"
+echo "  - Admin Console (Ingress): http://myfirstgitapp.local/libertyX/auth/admin"
+echo "  - Public (after external nginx): https://olite.hd.free.fr/libertyX/auth/admin"
 echo ""
 echo "Test the app:"
 echo "  - Local: http://myfirstgitapp.local/libertyX/"
