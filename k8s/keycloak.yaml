@@ -22,16 +22,14 @@ spec:
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: admin
-            - name: KC_HOSTNAME
-              value: dev2.sophia.com
-            - name: KC_HTTP_PORT
-              value: "8080"
-            - name: KC_HOSTNAME_PORT
-              value: "32089" # match Service nodePort for public URLs
+            - name: KC_PROXY
+              value: "edge"
             - name: KC_HOSTNAME_STRICT
               value: "false"
             - name: KC_HOSTNAME_STRICT_HTTPS
               value: "false"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
           ports:
             - containerPort: 8080
           volumeMounts:
