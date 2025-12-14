@@ -1,15 +1,3 @@
-#!/bin/bash
-
-set -e
-
-echo "======================================"
-echo "Fixing Nginx to pass full path to Keycloak"
-echo "======================================"
-
-echo ""
-echo "Creating updated Nginx ConfigMap..."
-
-cat <<'EOF' | kubectl apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -85,38 +73,3 @@ data:
         location = / { return 301 /libertyX/; }
       }
     }
-EOF
-
-echo ""
-echo "Reloading Nginx..."
-kubectl rollout restart deployment/nginx-deployment -n default
-kubectl rollout status deployment/nginx-deployment -n default --timeout=60s
-
-echo ""
-echo "Waiting 5 seconds for Nginx to stabilize..."
-sleep 5
-
-echo ""
-echo "======================================"
-echo "Testing Keycloak endpoints..."
-echo "======================================"
-
-echo ""
-echo "1. Testing OpenID configuration:"
-curl -s http://myfirstgitapp.local/libertyX/auth/realms/myapp/.well-known/openid-configuration | jq -r '.issuer' || echo "Failed"
-
-echo ""
-echo "2. Testing admin console:"
-curl -I http://myfirstgitapp.local/libertyX/auth/admin/ 2>&1 | grep -E "(HTTP|Location)" | head -5 || echo "Failed"
-
-echo ""
-echo "======================================"
-echo "Fix complete!"
-echo "======================================"
-echo ""
-echo "Expected issuer: http://myfirstgitapp.local/libertyX/auth/realms/myapp"
-echo ""
-echo "Next steps:"
-echo "1. Test: http://myfirstgitapp.local/libertyX/auth/realms/myapp/.well-known/openid-configuration"
-echo "2. Test: http://myfirstgitapp.local/libertyX/api/auth/providers"
-echo "3. Test login: http://myfirstgitapp.local/libertyX/"
