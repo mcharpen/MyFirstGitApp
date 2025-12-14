@@ -33,20 +33,9 @@ data:
           proxy_busy_buffers_size 256k;
         }
         
-        # NextAuth callback - handle /libertyX/callback/* (must be prefix location to match before /libertyX/)
-        location /libertyX/callback/ {
-          rewrite ^/libertyX/callback/(.*)$ /libertyX/api/auth/callback/$1 break;
-          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000;
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header X-Forwarded-Host $host;
-        }
-        
-        # API (NextAuth) under /api → Next.js at /libertyX/api/
+        # API (NextAuth) under /api → Next.js at /api/ (basePath doesn't apply to API routes!)
         location /api/ {
-          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/api/;
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/api/;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
