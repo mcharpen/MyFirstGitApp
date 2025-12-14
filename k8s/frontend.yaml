@@ -34,7 +34,7 @@ spec:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
             - name: NEXTAUTH_URL
-              value: http://dev2.sophia.com/libertyX
+              value: https://saint-viatre.hd.free.fr/libertyX
           ports:
             - containerPort: 3000
 ---
