@@ -10,6 +10,9 @@ export default NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    error: '/libertyX/api/auth/error', // Error page
+  },
   callbacks: {
     async redirect({ url, baseUrl }) {
       // Ensure redirects include the /libertyX base path
@@ -18,4 +21,5 @@ export default NextAuth({
       return process.env.NEXTAUTH_URL || baseUrl;
     },
   },
+  debug: true, // Enable debug mode to see more error details
 }); 

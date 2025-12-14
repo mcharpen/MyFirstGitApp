@@ -2,6 +2,8 @@
 
 ## Changes Made
 - Updated `frontend/pages/_app.tsx` to add `basePath="/libertyX/api/auth"` to SessionProvider
+- Updated `frontend/pages/api/auth/[...nextauth].ts` to add error page configuration and debug mode
+- Created `frontend/pages/error.tsx` for better error display
 - This ensures NextAuth uses correct paths with the `/libertyX` basePath
 
 ## Deploy Steps (Run on dev2 Kubernetes server)
@@ -51,3 +53,40 @@ Make sure the Keycloak client has these Redirect URIs:
 
 And Web Origins:
 - `https://olite.hd.free.fr`
+
+## Troubleshooting OAuthSignin Error
+
+If you see `OAuthSignin` error, check:
+
+### 1. Verify Keycloak is accessible from frontend pod
+```bash
+kubectl exec -it -n myfirstgitapp deploy/frontend -- curl -v http://dev2.sophia.com:32089/realms/myapp/.well-known/openid-configuration
+```
+
+### 2. Check frontend logs for detailed error
+```bash
+kubectl logs -n myfirstgitapp -l app=frontend --tail=100
+```
+
+### 3. Verify environment variables
+```bash
+kubectl get pod -n myfirstgitapp -l app=frontend -o jsonpath='{.items[0].spec.containers[0].env[?(@.name=="KEYCLOAK_ISSUER")].value}'
+kubectl get pod -n myfirstgitapp -l app=frontend -o jsonpath='{.items[0].spec.containers[0].env[?(@.name=="NEXTAUTH_URL")].value}'
+```
+
+### 4. Check Keycloak client secret
+```bash
+kubectl get secret -n myfirstgitapp frontend-secrets -o jsonpath='{.data.KEYCLOAK_CLIENT_SECRET}' | base64 -d
+```
+Compare with Keycloak Admin Console: Clients → myapp-client → Credentials
+
+### 5. If Keycloak is not accessible from pods
+The issue might be that `dev2.sophia.com:32089` is not resolvable/accessible from within the cluster. 
+
+**Option A**: Use cluster-internal service URL:
+```bash
+# Update frontend.yaml KEYCLOAK_ISSUER to:
+KEYCLOAK_ISSUER: http://keycloak.myfirstgitapp.svc.cluster.local:8080/realms/myapp
+```
+
+**Option B**: Expose Keycloak via Ingress and use that URL
