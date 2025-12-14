@@ -34,7 +34,7 @@ spec:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
             - name: NEXTAUTH_URL
-              value: https://saint-viatre.hd.free.fr/libertyX
+              value: http://myfirstgitapp.local/libertyX
           ports:
             - containerPort: 3000
 ---
