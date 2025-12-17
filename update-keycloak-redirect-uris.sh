@@ -18,7 +18,7 @@ echo ""
 # Log into Keycloak CLI
 echo "1. Logging into Keycloak admin..."
 kubectl exec -n myfirstgitapp $KEYCLOAK_POD -- /opt/keycloak/bin/kcadm.sh config credentials \
-  --server http://localhost:8080 \
+  --server http://localhost:8080/libertyX/auth \
   --realm master \
   --user admin \
   --password admin
