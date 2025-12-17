@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   basePath: '/libertyX',
   assetPrefix: '/libertyX',
-  trailingSlash: true, // Force trailing slashes to prevent redirect loop
+  // trailingSlash removed - it was causing issues with API routes and redirects
   // output: 'export', // static export disabled for server mode
 }
 
