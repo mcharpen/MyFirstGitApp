@@ -25,9 +25,6 @@ data:
           add_header Content-Type text/plain;
         }
         
-        # Redirect /libertyX to /libertyX/
-        location = /libertyX { return 301 /libertyX/; }
-        
         # Keycloak proxy at /libertyX/auth (pass full path to Keycloak)
         location /libertyX/auth/ {
           proxy_pass http://keycloak.myfirstgitapp.svc.cluster.local:8080/libertyX/auth/;
