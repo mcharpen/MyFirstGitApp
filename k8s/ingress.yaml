@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - saint-viatre.hd.free.fr
+        - olite.hd.free.fr
       secretName: myfirstgitapp-tls
   rules:
-    - host: saint-viatre.hd.free.fr
+    - host: olite.hd.free.fr
       http:
         paths:
           - path: /
