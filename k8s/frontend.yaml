@@ -34,7 +34,7 @@ spec:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
             - name: NEXTAUTH_URL
-              value: https://olite.hd.free.fr
+              value: https://olite.hd.free.fr/libertyX
           ports:
             - containerPort: 3000
 ---
