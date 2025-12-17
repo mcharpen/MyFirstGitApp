@@ -12,7 +12,7 @@ export default NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    error: '/libertyX/api/auth/error', // Error page
+    error: '/api/auth/error', // Error page (no basePath for API routes!)
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
