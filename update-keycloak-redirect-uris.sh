@@ -35,7 +35,7 @@ echo ""
 echo "2. Getting client internal ID..."
 CLIENT_ID=$(kubectl exec -n myfirstgitapp $KEYCLOAK_POD -- \
   /opt/keycloak/bin/kcadm.sh get clients -r myapp --fields id,clientId | \
-  grep -B1 '"clientId" : "myapp"' | grep '"id"' | sed 's/.*"id" : "\([^"]*\)".*/\1/')
+  grep -B1 '"clientId" : "myapp-client"' | grep '"id"' | sed 's/.*"id" : "\([^"]*\)".*/\1/')
 
 if [ -z "$CLIENT_ID" ]; then
   echo "❌ Failed to get client ID"
