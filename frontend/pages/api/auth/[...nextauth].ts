@@ -4,12 +4,21 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Dynamically determine the base URL from the request
-  const protocol = req.headers['x-forwarded-proto'] || 'http';
-  const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost:3000';
+  // Check X-Forwarded-* headers first (set by Nginx/Ingress)
+  const protocol = req.headers['x-forwarded-proto'] as string || 'http';
+  const host = (req.headers['x-forwarded-host'] as string) || (req.headers.host as string) || 'localhost:3000';
   const baseUrl = `${protocol}://${host}`;
   
   // Build the Keycloak issuer URL dynamically
   const keycloakIssuer = `${baseUrl}/libertyX/auth/realms/myapp`;
+
+  console.log('[NextAuth] Request headers:', {
+    'x-forwarded-proto': req.headers['x-forwarded-proto'],
+    'x-forwarded-host': req.headers['x-forwarded-host'],
+    'host': req.headers.host,
+    'computed-baseUrl': baseUrl,
+    'keycloakIssuer': keycloakIssuer
+  });
 
   return await NextAuth(req, res, {
     providers: [
