@@ -27,8 +27,8 @@ if [ -n "$USER_ID" ]; then
   kubectl exec -n myfirstgitapp $KC_POD -- /opt/keycloak/bin/kcadm.sh get users/$USER_ID -r myapp --fields enabled,emailVerified,credentials
   
   echo ""
-  echo "=== Resetting password to 'mypassword' (temporary=false) ==="
-  kubectl exec -n myfirstgitapp $KC_POD -- /opt/keycloak/bin/kcadm.sh set-password -r myapp --username mcharpen --new-password mypassword --temporary false
+  echo "=== Resetting password to 'mypassword' (not temporary) ==="
+  kubectl exec -n myfirstgitapp $KC_POD -- /opt/keycloak/bin/kcadm.sh set-password -r myapp --username mcharpen --new-password mypassword
   
   echo ""
   echo "Password reset successful!"
