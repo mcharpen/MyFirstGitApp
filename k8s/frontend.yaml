@@ -32,6 +32,8 @@ spec:
                 secretKeyRef:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
+            - name: NEXTAUTH_URL
+              value: https://olite.hd.free.fr/libertyX
             # NEXTAUTH_URL removed - let NextAuth auto-detect from request headers
             # This allows it to work with both http://myfirstgitapp.local and https://olite.hd.free.fr
           ports:
