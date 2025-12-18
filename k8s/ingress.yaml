@@ -7,6 +7,8 @@ metadata:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Trust the X-Forwarded-Proto header from the external Nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
 spec:
   tls:
     - hosts:
