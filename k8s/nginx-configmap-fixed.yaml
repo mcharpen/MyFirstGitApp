@@ -14,6 +14,14 @@ data:
       include /etc/nginx/mime.types;
       default_type application/octet-stream;
       sendfile on; keepalive_timeout 65;
+      
+      # Map to determine the forwarded protocol
+      # Use the X-Forwarded-Proto header if set (from external Nginx), otherwise use $scheme
+      map $http_x_forwarded_proto $forwarded_proto {
+        default $http_x_forwarded_proto;
+        ''      $scheme;
+      }
+      
       server {
         listen 80;
         server_name _;
@@ -31,7 +39,7 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $forwarded_proto;
           proxy_set_header X-Forwarded-Host $host;
           proxy_buffer_size 128k;
           proxy_buffers 4 256k;
@@ -44,18 +52,28 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $forwarded_proto;
+          proxy_set_header X-Forwarded-Host $host;
         }
         # Backend emp endpoints (supports bare /emp and /libertyX/emp)
-        location = /emp { proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; }
-        location /libertyX/emp { proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; }
+        location = /emp { 
+          proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; 
+          proxy_set_header X-Forwarded-Proto $forwarded_proto;
+          proxy_set_header X-Forwarded-Host $host;
+        }
+        location /libertyX/emp { 
+          proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp; 
+          proxy_set_header X-Forwarded-Proto $forwarded_proto;
+          proxy_set_header X-Forwarded-Host $host;
+        }
         # Frontend app at /libertyX/ (strip basePath before proxying to Next.js)
         location /libertyX/ {
           proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto $forwarded_proto;
+          proxy_set_header X-Forwarded-Host $host;
         }
         # Redirect root to /libertyX/
         location = / { return 301 /libertyX/; }

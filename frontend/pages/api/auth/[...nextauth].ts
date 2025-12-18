@@ -17,7 +17,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     'x-forwarded-host': req.headers['x-forwarded-host'],
     'host': req.headers.host,
     'computed-baseUrl': baseUrl,
-    'keycloakIssuer': keycloakIssuer
+    'keycloakIssuer': keycloakIssuer,
+    'full-headers': JSON.stringify(req.headers, null, 2)
   });
 
   return await NextAuth(req, res, {
@@ -35,6 +36,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     },
     callbacks: {
       async redirect({ url, baseUrl: callbackBaseUrl }) {
+        console.log('[NextAuth] Redirect callback:', { url, callbackBaseUrl, computedBaseUrl: baseUrl });
         // Handle relative URLs
         if (url.startsWith("/")) return `${baseUrl}/libertyX${url}`;
         // Handle URLs from the same origin
