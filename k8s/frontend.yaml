@@ -26,15 +26,14 @@ spec:
                 secretKeyRef:
                   name: frontend-secrets
                   key: KEYCLOAK_CLIENT_SECRET
-            - name: KEYCLOAK_ISSUER
-              value: https://olite.hd.free.fr/libertyX/auth/realms/myapp
+            # KEYCLOAK_ISSUER removed - now dynamically generated based on request headers
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
-            - name: NEXTAUTH_URL
-              value: https://olite.hd.free.fr/libertyX/api/auth
+            # NEXTAUTH_URL removed - let NextAuth auto-detect from request headers
+            # This allows it to work with both http://myfirstgitapp.local and https://olite.hd.free.fr
           ports:
             - containerPort: 3000
 ---
