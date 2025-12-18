@@ -5,8 +5,9 @@
 KC_POD=$(kubectl get pod -n myfirstgitapp -l app=keycloak -o jsonpath='{.items[0].metadata.name}')
 
 echo "=== Configuring kcadm.sh ==="
+# Note: Even though KC_HTTP_RELATIVE_PATH is set, we access Keycloak at root from inside the pod
 kubectl exec -n myfirstgitapp $KC_POD -- /opt/keycloak/bin/kcadm.sh config credentials \
-  --server http://localhost:8080 \
+  --server http://localhost:8080/libertyX/auth \
   --realm master \
   --user admin \
   --password admin
