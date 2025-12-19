@@ -47,7 +47,7 @@ data:
         }
         
         # API (NextAuth) under /api → Next.js at /libertyX/api/
-        location /api/ {
+        location /api {
           proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/api/;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -66,8 +66,8 @@ data:
           proxy_set_header X-Forwarded-Proto $forwarded_proto;
           proxy_set_header X-Forwarded-Host $host;
         }
-        # Frontend app at /libertyX/ (preserve basePath)
-        location /libertyX/ {
+        # Frontend app at /libertyX (preserve basePath)
+        location /libertyX {
           proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
