@@ -27,11 +27,11 @@ spec:
             - name: KEYCLOAK_CLIENT_SECRET
               value: your-actual-keycloak-client-secret
             - name: KEYCLOAK_ISSUER
-              value: http://keycloak:8080/realms/myapp
+              value: https://myfirstgitapp.local/libertyX/auth/realms/myapp
             - name: NEXTAUTH_SECRET
               value: your-random-secret
             - name: NEXTAUTH_URL
-              value: http://dev2.sophia.com/libertyX
+              value: https://myfirstgitapp.local/libertyX
             - name: NODE_ENV
               value: production
           image: frontend
