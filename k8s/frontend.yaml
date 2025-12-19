@@ -26,7 +26,8 @@ spec:
                 secretKeyRef:
                   name: frontend-secrets
                   key: KEYCLOAK_CLIENT_SECRET
-            # KEYCLOAK_ISSUER removed - now dynamically generated based on request headers
+            - name: KEYCLOAK_ISSUER
+              value: https://keycloak.myfirstgitapp.local/auth/realms/myrealm
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
