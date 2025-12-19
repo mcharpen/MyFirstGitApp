@@ -28,13 +28,11 @@ spec:
             - --import-realm
           env:
             - name: KC_HOSTNAME
-              value: localhost
-            - name: KC_HOSTNAME_PORT
-              value: "8089"
-            - name: KC_HOSTNAME_STRICT
-              value: "false"
-            - name: KC_HOSTNAME_STRICT_HTTPS
-              value: "false"
+              value: myfirstgitapp.local
+            - name: KC_HTTP_RELATIVE_PATH
+              value: /libertyX/auth
+            - name: KC_PROXY
+              value: edge
             - name: KC_HTTP_PORT
               value: "8080"
             - name: KEYCLOAK_ADMIN
