@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myfirstgitapp
-  namespace: default  # Changed to default namespace where the working nginx service is
+  namespace: myfirstgitapp
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
