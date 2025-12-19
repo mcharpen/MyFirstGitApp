@@ -50,6 +50,5 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return `${baseUrl}/libertyX`;
       },
     },
-    debug: true, // Enable debug mode to see more error details
   });
 }
