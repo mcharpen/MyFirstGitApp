@@ -3,23 +3,10 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  // Dynamically determine the base URL from the request
-  // Check X-Forwarded-* headers first (set by Nginx/Ingress)
-  const protocol = req.headers['x-forwarded-proto'] as string || 'http';
-  const host = (req.headers['x-forwarded-host'] as string) || (req.headers.host as string) || 'localhost:3000';
-  const baseUrl = `${protocol}://${host}`;
-  
-  // Build the Keycloak issuer URL dynamically
-  const keycloakIssuer = `${baseUrl}/libertyX/auth/realms/myapp`;
+  // Use the internal Kubernetes DNS name for Keycloak
+  const keycloakIssuer = "http://keycloak.myfirstgitapp.svc.cluster.local:8080/libertyX/auth/realms/myapp";
 
-  console.log('[NextAuth] Request headers:', {
-    'x-forwarded-proto': req.headers['x-forwarded-proto'],
-    'x-forwarded-host': req.headers['x-forwarded-host'],
-    'host': req.headers.host,
-    'computed-baseUrl': baseUrl,
-    'keycloakIssuer': keycloakIssuer,
-    'full-headers': JSON.stringify(req.headers, null, 2)
-  });
+  console.log('[NextAuth] Using Keycloak issuer:', keycloakIssuer);
 
   return await NextAuth(req, res, {
     providers: [
@@ -32,18 +19,15 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     ],
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
-      error: '/api/auth/error', // Error page (no basePath for API routes!)
+      error: '/api/auth/error',
     },
     callbacks: {
       async redirect({ url, baseUrl: callbackBaseUrl }) {
-        console.log('[NextAuth] Redirect callback:', { url, callbackBaseUrl, computedBaseUrl: baseUrl });
-        // Handle relative URLs
-        if (url.startsWith("/")) return `${baseUrl}/libertyX${url}`;
-        // Handle URLs from the same origin
+        if (url.startsWith("/")) return `${callbackBaseUrl}/libertyX${url}`;
         else if (new URL(url).origin === callbackBaseUrl) return url;
-        return `${baseUrl}/libertyX`;
+        return `${callbackBaseUrl}/libertyX`;
       },
     },
-    debug: true, // Enable debug mode to see more error details
+    debug: true,
   });
-} 
+}
