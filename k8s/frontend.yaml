@@ -13,6 +13,10 @@ spec:
       labels:
         app: frontend
     spec:
+      hostAliases:
+        - ip: "10.97.59.126"
+          hostnames:
+            - "olite.hd.free.fr"
       containers:
         - name: frontend
           image: docker.io/mcharpen5/myfirstapp-frontend:latest
@@ -27,14 +31,14 @@ spec:
                   name: frontend-secrets
                   key: KEYCLOAK_CLIENT_SECRET
             - name: KEYCLOAK_ISSUER
-              value: https://myfirstgitapp.local/libertyX/auth/realms/myapp
+              value: https://olite.hd.free.fr/libertyX/auth/realms/myapp
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
             - name: NEXTAUTH_URL
-              value: https://myfirstgitapp.local/libertyX
+              value: https://olite.hd.free.fr/libertyX/api/auth
             - name: NODE_TLS_REJECT_UNAUTHORIZED
               value: "0"
           ports:

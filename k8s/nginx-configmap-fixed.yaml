@@ -24,7 +24,7 @@ data:
       
       server {
         listen 80;
-        server_name myfirstgitapp.local;
+        server_name myfirstgitapp.local olite.hd.free.fr;
         
         # Health check endpoint for readiness probe
         location = /health {
