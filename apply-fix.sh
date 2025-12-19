@@ -9,12 +9,17 @@ kubectl apply -f namespace.yaml
 
 echo "Applying ConfigMaps..."
 kubectl apply -f nginx-configmap-fixed.yaml
-kubectl apply -f keycloak-cm0-configmap.yaml || true # Ignore if missing
 
 echo "Applying Services and Deployments..."
 kubectl apply -f nginx.yaml
 kubectl apply -f keycloak.yaml
 kubectl apply -f frontend.yaml
+
+echo "Handling Ingress Conflicts..."
+# Delete conflicting ingress in default namespace if it exists
+echo "Deleting potential conflicting ingress in default namespace..."
+kubectl delete ingress myfirstgitapp -n default --ignore-not-found=true
+kubectl delete ingress myapp-ingress -n default --ignore-not-found=true
 
 echo "Applying Ingress..."
 if [ -f "ingress.yaml" ]; then
