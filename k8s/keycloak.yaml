@@ -31,9 +31,9 @@ spec:
             - name: KC_HTTP_RELATIVE_PATH
               value: "/libertyX/auth"
             - name: KC_HOSTNAME_URL
-              value: "https://olite.hd.free.fr/libertyX/auth"
+              value: "https://myfirstgitapp.local/libertyX/auth"
             - name: KC_HOSTNAME_ADMIN_URL
-              value: "https://olite.hd.free.fr/libertyX/auth"
+              value: "https://myfirstgitapp.local/libertyX/auth"
             - name: KC_PROXY
               value: "edge"
           ports:
@@ -80,12 +80,9 @@ data:
             "http://dev2.sophia.com/libertyX/api/auth/callback/keycloak",
             "http://dev2.sophia.com/libertyX/callback/keycloak",
             "http://dev2.sophia.com/libertyX/*",
-            "http://localhost:3000/libertyX/*",
-            "http://localhost:3000/libertyX/api/auth/callback/keycloak",
-            "http://localhost:3000/libertyX/callback/keycloak",
-            "http://myfirstgitapp.local/libertyX/*",
-            "http://myfirstgitapp.local/libertyX/api/auth/callback/keycloak",
-            "http://myfirstgitapp.local/libertyX/callback/keycloak",
+            "https://myfirstgitapp.local/libertyX/*",
+            "https://myfirstgitapp.local/libertyX/api/auth/callback/keycloak",
+            "https://myfirstgitapp.local/libertyX/callback/keycloak",
             "https://olite.hd.free.fr/libertyX/*",
             "https://olite.hd.free.fr/libertyX/api/auth/callback/keycloak",
             "https://olite.hd.free.fr/libertyX/callback/keycloak"
@@ -93,7 +90,7 @@ data:
           "webOrigins": [
             "http://dev2.sophia.com",
             "http://localhost:3000",
-            "http://myfirstgitapp.local",
+            "https://myfirstgitapp.local",
             "https://olite.hd.free.fr"
           ]
         }
