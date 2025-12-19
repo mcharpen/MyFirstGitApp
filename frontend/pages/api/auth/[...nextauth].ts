@@ -36,13 +36,20 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     ],
     debug: true,
     pages: {
-      // Handle relative URLs
-      if(url.startsWith("/")) return `${baseUrl}/libertyX${url}`;
+      signIn: '/libertyX/api/auth/signin',
+      signOut: '/libertyX/api/auth/signout',
+      error: '/libertyX/api/auth/error', // Force correct path for errors
+    },
+    callbacks: {
+      async redirect({ url, baseUrl: callbackBaseUrl }) {
+        console.log('[NextAuth] Redirect callback:', { url, callbackBaseUrl, computedBaseUrl: baseUrl });
+        // Handle relative URLs
+        if (url.startsWith("/")) return `${baseUrl}/libertyX${url}`;
         // Handle URLs from the same origin
         else if (new URL(url).origin === callbackBaseUrl) return url;
-  return `${baseUrl}/libertyX`;
-},
+        return `${baseUrl}/libertyX`;
+      },
     },
-debug: true, // Enable debug mode to see more error details
+    debug: true, // Enable debug mode to see more error details
   });
-} 
+}
