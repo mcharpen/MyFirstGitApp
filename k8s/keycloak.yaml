@@ -22,16 +22,20 @@ spec:
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: admin
-            - name: KC_HOSTNAME
-              value: dev2.sophia.com
-            - name: KC_HTTP_PORT
-              value: "8080"
-            - name: KC_HOSTNAME_PORT
-              value: "8089"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
             - name: KC_HOSTNAME_STRICT
               value: "false"
             - name: KC_HOSTNAME_STRICT_HTTPS
               value: "false"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/libertyX/auth"
+            - name: KC_HOSTNAME_URL
+              value: "https://myfirstgitapp.local/libertyX/auth"
+            - name: KC_HOSTNAME_ADMIN_URL
+              value: "https://myfirstgitapp.local/libertyX/auth"
+            - name: KC_PROXY
+              value: "edge"
           ports:
             - containerPort: 8080
           volumeMounts:
@@ -64,4 +68,48 @@ metadata:
   namespace: myfirstgitapp
 data:
   myapp-realm.json: |
-    // ... Paste content of keycloak-import/myapp-realm.json here
+    {
+      "realm": "myapp",
+      "enabled": true,
+      "clients": [
+        {
+          "clientId": "myapp-client",
+          "enabled": true,
+          "publicClient": true,
+          "redirectUris": [
+            "http://dev2.sophia.com/libertyX/api/auth/callback/keycloak",
+            "http://dev2.sophia.com/libertyX/callback/keycloak",
+            "http://dev2.sophia.com/libertyX/*",
+            "https://myfirstgitapp.local/libertyX/*",
+            "https://myfirstgitapp.local/libertyX/api/auth/callback/keycloak",
+            "https://myfirstgitapp.local/libertyX/callback/keycloak",
+            "https://olite.hd.free.fr/libertyX/*",
+            "https://olite.hd.free.fr/libertyX/api/auth/callback/keycloak",
+            "https://olite.hd.free.fr/libertyX/callback/keycloak"
+          ],
+          "webOrigins": [
+            "http://dev2.sophia.com",
+            "http://localhost:3000",
+            "https://myfirstgitapp.local",
+            "https://olite.hd.free.fr"
+          ]
+        }
+      ],
+      "users": [
+        {
+          "username": "mcharpen",
+          "enabled": true,
+          "email": "marc.charpentier@icloud.com",
+          "firstName": "Marc",
+          "lastName": "Charpentier",
+          "credentials": [
+            {
+              "type": "password",
+              "value": "mypassword",
+              "temporary": false
+            }
+          ]
+        }
+      ]
+    }
+

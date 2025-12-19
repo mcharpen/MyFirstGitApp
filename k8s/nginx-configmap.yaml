@@ -1,0 +1,69 @@
+apiVersion: v1
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes auto;
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+
+    events { worker_connections 1024; }
+
+    http {
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+      log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+      access_log /var/log/nginx/access.log main;
+
+      sendfile on; keepalive_timeout 65;
+
+      server {
+        listen 80;
+        server_name dev2.sophia.com;
+
+        location /api/ {
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/api/;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location = /emp {
+          proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /libertyX/emp {
+          proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /libertyX/ {
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location = / { return 301 /libertyX/; }
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"nginx.conf":"user nginx;\nworker_processes auto;\nerror_log /var/log/nginx/error.log warn;\npid /var/run/nginx.pid;\n\nevents { worker_connections 1024; }\n\nhttp {\n  include /etc/nginx/mime.types;\n  default_type application/octet-stream;\n  access_log /var/log/nginx/access.log main;\n  sendfile on; keepalive_timeout 65;\n\n  server {\n    listen 80;\n    server_name dev2.sophia.com;\n\n    location /api/ {\n      proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/libertyX/api/;\n      proxy_set_header Host $host;\n      proxy_set_header X-Real-IP $remote_addr;\n      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n      proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location = /emp {\n      proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp;\n      proxy_set_header Host $host;\n      proxy_set_header X-Real-IP $remote_addr;\n      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n      proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location /libertyX/emp {\n      proxy_pass http://backend.myfirstgitapp.svc.cluster.local:8080/emp;\n      proxy_set_header Host $host;\n      proxy_set_header X-Real-IP $remote_addr;\n      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n      proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location /libertyX/ {\n      proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/;\n      proxy_set_header Host $host;\n      proxy_set_header X-Real-IP $remote_addr;\n      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n      proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location = / { return 301 /libertyX/; }\n  }\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"nginx-conf","namespace":"myfirstgitapp"}}
+  creationTimestamp: "2025-12-04T15:47:53Z"
+  name: nginx-conf
+  namespace: myfirstgitapp
+  resourceVersion: "161442"
+  uid: c7ee68fc-c5b2-4870-93e4-04ebbd5e75b2

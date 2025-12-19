@@ -5,9 +5,17 @@ metadata:
   namespace: myfirstgitapp
   annotations:
     kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Trust the X-Forwarded-Proto header from the external Nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
 spec:
+  tls:
+    - hosts:
+        - olite.hd.free.fr
+      secretName: myfirstgitapp-tls
   rules:
-    - host: dev2.sophia.com
+    - host: olite.hd.free.fr
       http:
         paths:
           - path: /
@@ -17,3 +25,14 @@ spec:
                 name: nginx
                 port:
                   number: 80
+    - host: myfirstgitapp.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+
