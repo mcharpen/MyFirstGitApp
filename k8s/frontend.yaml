@@ -13,6 +13,10 @@ spec:
       labels:
         app: frontend
     spec:
+      hostAliases:
+        - ip: "10.108.47.152"
+          hostnames:
+            - "myfirstgitapp.local"
       containers:
         - name: frontend
           image: docker.io/mcharpen5/myfirstapp-frontend:latest
