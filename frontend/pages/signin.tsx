@@ -1,6 +1,12 @@
-import { getProviders, signIn } from "next-auth/react";
+import { getProviders, signIn, LiteralUnion, ClientSafeProvider } from "next-auth/react";
+import { GetServerSidePropsContext } from "next";
+import { BuiltInProviderType } from "next-auth/providers";
 
-export default function SignIn({ providers }) {
+interface SignInProps {
+  providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
+}
+
+export default function SignIn({ providers }: SignInProps) {
   return (
     <div style={{ textAlign: 'center', marginTop: '2rem' }}>
       <h1>Sign in</h1>
@@ -15,7 +21,7 @@ export default function SignIn({ providers }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const providers = await getProviders();
   return {
     props: { providers },
