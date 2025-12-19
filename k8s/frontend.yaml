@@ -34,7 +34,7 @@ spec:
                   name: frontend-secrets
                   key: NEXTAUTH_SECRET
             - name: NEXTAUTH_URL
-              value: https://myfirstgitapp.local/libertyX
+              value: https://myfirstgitapp.local/libertyX/api/auth
             - name: NODE_TLS_REJECT_UNAUTHORIZED
               value: "0"
           ports:
