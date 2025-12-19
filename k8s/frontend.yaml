@@ -14,7 +14,7 @@ spec:
         app: frontend
     spec:
       hostAliases:
-        - ip: "10.108.47.152"
+        - ip: "10.97.59.126"
           hostnames:
             - "myfirstgitapp.local"
       containers:
