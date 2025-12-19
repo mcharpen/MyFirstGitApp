@@ -8,12 +8,13 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const protocol = req.headers['x-forwarded-proto'] as string || 'http';
   const host = (req.headers['x-forwarded-host'] as string) || (req.headers.host as string) || 'localhost:3000';
   const baseUrl = `${protocol}://${host}`;
-  
+
   console.log('[NextAuth] Request headers:', {
     'x-forwarded-proto': req.headers['x-forwarded-proto'],
     'x-forwarded-host': req.headers['x-forwarded-host'],
     'host': req.headers.host,
     'computed-baseUrl': baseUrl,
+    'NEXTAUTH_URL (env)': process.env.NEXTAUTH_URL,
     'full-headers': JSON.stringify(req.headers, null, 2)
   });
 
