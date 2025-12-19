@@ -21,12 +21,12 @@ echo "✓ Nginx restarted"
 echo ""
 echo "Step 3: Rebuilding frontend Docker image..."
 cd frontend
-docker build -t mcharpen/myfirstgitapp-frontend:latest .
+docker build -t mcharpen5/myfirstgitapp-frontend:latest .
 echo "✓ Frontend image built"
 
 echo ""
 echo "Step 4: Pushing frontend image to Docker Hub..."
-docker push mcharpen/myfirstgitapp-frontend:latest
+docker push mcharpen5/myfirstgitapp-frontend:latest
 echo "✓ Image pushed"
 cd ..
 
