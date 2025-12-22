@@ -13,8 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const keycloakIssuer = process.env.KEYCLOAK_ISSUER || 'https://olite.hd.free.fr/libertyX/auth/realms/myapp';
         const logoutUrl = `${keycloakIssuer}/protocol/openid-connect/logout`;
 
+        // Just redirect to home page
         const params = new URLSearchParams({
-            post_logout_redirect_uri: 'https://olite.hd.free.fr/libertyX/api/auth/signout',
+            post_logout_redirect_uri: 'https://olite.hd.free.fr/libertyX/',
         });
 
         // Add id_token_hint if available
@@ -28,10 +29,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const finalUrl = `${logoutUrl}?${params.toString()}`;
         console.log('[Logout] Redirecting to:', finalUrl);
 
-        // Redirect to Keycloak logout (which will then redirect back to our signout page)
+        // Redirect to Keycloak logout (which will redirect to home page)
         res.redirect(finalUrl);
     } catch (error) {
         console.error('[Logout] Error during logout:', error);
-        res.redirect('/libertyX/api/auth/signout');
+        res.redirect('/libertyX/');
     }
 }
