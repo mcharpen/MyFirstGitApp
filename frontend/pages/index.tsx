@@ -93,7 +93,7 @@ const Home: React.FC = () => {
           {session ? (
             <>
               <span>Signed in as {session.user?.email || session.user?.name}</span>
-              <button onClick={() => signOut()} style={{ marginLeft: 12 }}>Sign out</button>
+              <button onClick={() => signOut({ callbackUrl: '/libertyX/' })} style={{ marginLeft: 12 }}>Sign out</button>
             </>
           ) : (
             <button onClick={() => signIn ? signIn("keycloak") : undefined}>Login with Keycloak</button>
