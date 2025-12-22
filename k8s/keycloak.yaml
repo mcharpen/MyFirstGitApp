@@ -41,10 +41,28 @@ spec:
           volumeMounts:
             - name: realm-import
               mountPath: /opt/keycloak/data/import
+            - name: custom-theme-properties
+              mountPath: /opt/keycloak/themes/custom/login/theme.properties
+              subPath: theme.properties
+            - name: custom-theme-css
+              mountPath: /opt/keycloak/themes/custom/login/resources/css/login.css
+              subPath: login.css
       volumes:
         - name: realm-import
           configMap:
             name: keycloak-realm
+        - name: custom-theme-properties
+          configMap:
+            name: keycloak-custom-theme
+            items:
+              - key: theme.properties
+                path: theme.properties
+        - name: custom-theme-css
+          configMap:
+            name: keycloak-custom-theme
+            items:
+              - key: login.css
+                path: login.css
 ---
 apiVersion: v1
 kind: Service
