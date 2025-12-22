@@ -44,6 +44,13 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       error: '/libertyX/api/auth/error', // Force correct path for errors
     },
     callbacks: {
+      async jwt({ token, account }) {
+        // Persist the id_token to the token right after signin
+        if (account?.id_token) {
+          token.id_token = account.id_token;
+        }
+        return token;
+      },
       async redirect({ url, baseUrl: callbackBaseUrl }) {
         console.log('[NextAuth] Redirect callback:', { url, callbackBaseUrl, computedBaseUrl: baseUrl });
         // Handle relative URLs
@@ -51,6 +58,20 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         // Handle URLs from the same origin
         else if (new URL(url).origin === callbackBaseUrl) return url;
         return `${baseUrl}/libertyX`;
+      },
+    },
+    events: {
+      async signOut({ token }) {
+        // Redirect to Keycloak logout
+        if (token?.id_token) {
+          const keycloakLogoutUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout`;
+          const params = new URLSearchParams({
+            id_token_hint: token.id_token as string,
+            post_logout_redirect_uri: `${baseUrl}/libertyX/`,
+          });
+          // This will be handled client-side via redirect
+          console.log('[NextAuth] Keycloak logout URL:', `${keycloakLogoutUrl}?${params}`);
+        }
       },
     },
   });

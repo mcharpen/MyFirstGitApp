@@ -93,7 +93,11 @@ const Home: React.FC = () => {
           {session ? (
             <>
               <span>Signed in as {session.user?.email || session.user?.name}</span>
-              <button onClick={() => signOut({ callbackUrl: '/' })} style={{ marginLeft: 12 }}>Sign out</button>
+              <button onClick={() => {
+                const keycloakLogoutUrl = 'https://olite.hd.free.fr/libertyX/auth/realms/myapp/protocol/openid-connect/logout';
+                const redirectUri = encodeURIComponent('https://olite.hd.free.fr/libertyX/');
+                window.location.href = `${keycloakLogoutUrl}?post_logout_redirect_uri=${redirectUri}`;
+              }} style={{ marginLeft: 12 }}>Sign out</button>
             </>
           ) : (
             <button onClick={() => signIn ? signIn("keycloak") : undefined}>Login with Keycloak</button>
