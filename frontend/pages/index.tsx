@@ -93,10 +93,11 @@ const Home: React.FC = () => {
           {session ? (
             <>
               <span>Signed in as {session.user?.email || session.user?.name}</span>
-              <button onClick={() => {
-                const keycloakLogoutUrl = 'https://olite.hd.free.fr/libertyX/auth/realms/myapp/protocol/openid-connect/logout';
-                const redirectUri = encodeURIComponent('https://olite.hd.free.fr/libertyX/');
-                window.location.href = `${keycloakLogoutUrl}?post_logout_redirect_uri=${redirectUri}`;
+              <button onClick={async () => {
+                // First sign out from NextAuth
+                await signOut({ redirect: false });
+                // Then redirect to our custom logout endpoint which will handle Keycloak logout
+                window.location.href = '/libertyX/api/auth/logout';
               }} style={{ marginLeft: 12 }}>Sign out</button>
             </>
           ) : (
