@@ -32,6 +32,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         clientId: process.env.KEYCLOAK_CLIENT_ID || "myapp-client",
         clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "your-client-secret",
         issuer: process.env.KEYCLOAK_ISSUER,
+        wellKnown: process.env.KEYCLOAK_INTERNAL_ISSUER
+          ? `${process.env.KEYCLOAK_INTERNAL_ISSUER}/.well-known/openid-configuration`
+          : undefined,
       }),
     ],
     debug: true,

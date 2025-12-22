@@ -31,6 +31,8 @@ spec:
                   name: frontend-secrets
                   key: KEYCLOAK_CLIENT_SECRET
             - name: KEYCLOAK_ISSUER
+              value: https://olite.hd.free.fr/libertyX/auth/realms/myapp
+            - name: KEYCLOAK_INTERNAL_ISSUER
               value: http://keycloak:8080/libertyX/auth/realms/myapp
             - name: NEXTAUTH_SECRET
               valueFrom:
