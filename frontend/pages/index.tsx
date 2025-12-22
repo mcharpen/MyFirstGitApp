@@ -93,10 +93,8 @@ const Home: React.FC = () => {
           {session ? (
             <>
               <span>Signed in as {session.user?.email || session.user?.name}</span>
-              <button onClick={async () => {
-                // First sign out from NextAuth
-                await signOut({ redirect: false });
-                // Then redirect to our custom logout endpoint which will handle Keycloak logout
+              <button onClick={() => {
+                // Redirect to our custom logout endpoint which will handle everything
                 window.location.href = '/libertyX/api/auth/logout';
               }} style={{ marginLeft: 12 }}>Sign out</button>
             </>
