@@ -8,7 +8,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const protocol = req.headers['x-forwarded-proto'] as string || 'http';
   const host = (req.headers['x-forwarded-host'] as string) || (req.headers.host as string) || 'localhost:3000';
   const baseUrl = `${protocol}://${host}`;
-  
+
   console.log('[NextAuth] Request headers:', {
     'x-forwarded-proto': req.headers['x-forwarded-proto'],
     'x-forwarded-host': req.headers['x-forwarded-host'],
@@ -17,18 +17,31 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     'full-headers': JSON.stringify(req.headers, null, 2)
   });
 
+  // Debug logging
+  console.log("NextAuth Configuration:");
+  console.log("ISSUER:", process.env.KEYCLOAK_ISSUER);
+  console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+
+  if (!process.env.KEYCLOAK_ISSUER) {
+    throw new Error("Missing KEYCLOAK_ISSUER environment variable");
+  }
+
   return await NextAuth(req, res, {
     providers: [
       KeycloakProvider({
-        clientId: process.env.KEYCLOAK_CLIENT_ID || "",
-        clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "",
+        clientId: process.env.KEYCLOAK_CLIENT_ID || "myapp-client",
+        clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "your-client-secret",
         issuer: process.env.KEYCLOAK_ISSUER,
-        checks: ['pkce', 'state'],
+        wellKnown: process.env.KEYCLOAK_INTERNAL_ISSUER
+          ? `${process.env.KEYCLOAK_INTERNAL_ISSUER}/.well-known/openid-configuration`
+          : undefined,
       }),
     ],
-    secret: process.env.NEXTAUTH_SECRET,
+    debug: true,
     pages: {
-      error: '/api/auth/error', // Error page (no basePath for API routes!)
+      signIn: '/libertyX/api/auth/signin',
+      signOut: '/libertyX/api/auth/signout',
+      error: '/libertyX/api/auth/error', // Force correct path for errors
     },
     callbacks: {
       async redirect({ url, baseUrl: callbackBaseUrl }) {
@@ -40,6 +53,5 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return `${baseUrl}/libertyX`;
       },
     },
-    debug: true, // Enable debug mode to see more error details
   });
-} 
+}

@@ -27,7 +27,7 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto https;
         }
 
         location = /emp {
@@ -35,7 +35,15 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto https;
+        }
+
+        location /libertyX/auth/ {
+          proxy_pass http://keycloak:8080/libertyX/auth/;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto https;
         }
 
         location /libertyX/emp {
@@ -43,15 +51,15 @@ data:
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto https;
         }
 
         location /libertyX/ {
-          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000/;
+          proxy_pass http://frontend.myfirstgitapp.svc.cluster.local:3000;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Proto https;
         }
 
         location = / { return 301 /libertyX/; }
@@ -65,5 +73,3 @@ metadata:
   creationTimestamp: "2025-12-04T15:47:53Z"
   name: nginx-conf
   namespace: myfirstgitapp
-  resourceVersion: "161442"
-  uid: c7ee68fc-c5b2-4870-93e4-04ebbd5e75b2

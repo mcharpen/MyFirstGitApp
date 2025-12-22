@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider session={session} basePath="/libertyX/api/auth">
+    <SessionProvider session={session} basePath="https://olite.hd.free.fr/libertyX/api/auth">
       <Component {...pageProps} />
     </SessionProvider>
   );
