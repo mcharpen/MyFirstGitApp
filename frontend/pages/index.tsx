@@ -74,7 +74,7 @@ const Home: React.FC = () => {
         <nav>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             <li style={{ padding: '8px 6px', borderRadius: 6, cursor: 'pointer', background: '#1f2937', marginBottom: 8 }}>
-              <a href="/libertyX/employees" style={{ color: '#fff', textDecoration: 'none', display: 'block' }}>Employees</a>
+              <a href="/employees" style={{ color: '#fff', textDecoration: 'none', display: 'block' }}>Employees</a>
             </li>
             <li style={{ padding: '8px 6px', borderRadius: 6, cursor: 'pointer', background: '#1f2937', marginBottom: 8 }}>
               <a href="/jobs" style={{ color: '#fff', textDecoration: 'none', display: 'block' }}>Jobs</a>
