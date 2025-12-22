@@ -93,10 +93,7 @@ const Home: React.FC = () => {
                     {session ? (
                         <>
                             <span>Signed in as {session.user?.email || session.user?.name}</span>
-                            <button onClick={() => {
-                                // Redirect to our custom logout endpoint which will handle everything
-                                window.location.href = '/libertyX/api/auth/logout';
-                            }} style={{ marginLeft: 12 }}>Sign out</button>
+                            <button onClick={() => signOut ? signOut({ callbackUrl: '/libertyX/' }) : undefined} style={{ marginLeft: 12 }}>Sign out</button>
                         </>
                     ) : (
                         <button onClick={() => signIn ? signIn("keycloak") : undefined}>Login with Keycloak</button>
